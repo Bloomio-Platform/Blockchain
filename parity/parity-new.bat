@@ -1,0 +1,1 @@
+parity account new --chain morden2.json --keys-path parity\keys

@@ -1,0 +1,162 @@
+<html>
+<head>
+</head>
+<body>
+<script type="text/javascript" src="../dist/bloomio.js"></script>
+<script type="text/JavaScript">
+var Bloomio = window.Bloomio;
+var bloomio = new Bloomio();
+const account = bloomio.Accounts.new();
+bloomio.Init(bloomio.Accounts, 'http://localhost:8545');
+
+function update_balances()
+{
+  window.coins.BalanceOfP(window.bank.Address())
+  .then(function(value) {
+    document.getElementById("coins_bank_balance").innerText = value;
+  });
+
+  if (window.user !== null) {
+      window.coins.BalanceOfP(window.user.Address())
+     .then(function(value) {
+         document.getElementById("user_coins_balance").innerText = value;
+      });
+  }
+
+  if (window.tokens !== null) {
+      window.tokens.BalanceOfP(window.bank.Address())
+     .then(function(value) {
+         document.getElementById("tokens_bank_balance").innerText = value;
+      });
+  }
+
+  if (window.tokens !== null &&window.user !== null) {
+      window.tokens.BalanceOfP(window.user.Address())
+     .then(function(value) {
+         document.getElementById("tokens_user_balance").innerText = value;
+      });
+  }
+}
+
+function deploy_coins()
+{
+  bloomio.Coin.DeployP(account.address, window.trading.Address(), 20000, 1, 1, 1, 0, 100, window.bank)
+  .then(function(coins){
+     window.coins = coins;
+     document.getElementById("coins_address").innerText = coins.Contract.address;
+     update_balances();
+  });
+}
+
+function deploy_trading()
+{
+  bloomio.Trading.DeployP(window.bank)
+    .then(function(trading) {
+       window.trading = trading;
+       document.getElementById("trading_address").innerText = trading.Contract.address;
+       deploy_coins();
+    });
+}
+
+function deploy()
+{
+  document.getElementById("bank_address").innerText = account.address;
+  bloomio.Account.DeployP("bank", account.address)
+    .then(function(value){
+        document.getElementById("bank_wallet_address").innerText = value.Contract.address;
+        window.bank = value; 
+        deploy_trading();
+    });
+
+}
+
+
+function create_user()
+{
+  document.getElementById("user_address").innerText = account.address;
+  bloomio.Account.DeployP(100, account.address)
+    .then(function(value) {
+        document.getElementById("user_wallet_address").innerText = value.Contract.address;
+        window.user = value;
+        update_balances();
+      });
+}
+
+function send_money_to_user()
+{
+  window.coins.TransferP(window.user.Address(), 1000)
+        .then(()=>window.coins.WaitForMoneyTransferP(window.bank.Address(), window.user.Address(), 1000))
+        .then(()=>update_balances());
+}
+
+function deploy_startup()
+{
+  bloomio.Token.DeployP(account.address, window.trading.Address(), 10000, window.bank)
+  .then(function(tokens){
+     window.tokens = tokens;
+     document.getElementById("startup_address").innerText = tokens.Contract.address;
+     update_balances();
+  });
+  
+}
+
+
+function buy_tokens()
+{
+  var tokenFirst = window.tokens.Impersonate(window.bank);
+  var coinSecond = window.coins.Impersonate(window.user);
+  var tokens_to_buy = 300;
+  var coins_to_spent = 1000;
+  console.log("will Approve coins and tokens for trading...");
+  return bloomio.Q.all([tokenFirst.ApproveP(window.trading.Address(), tokens_to_buy), coinSecond.ApproveP(window.trading.Address(), coins_to_spent)])
+          .then(()=>bloomio.Q.all([window.tokens.WaitForMoneyAllowanceP(window.bank.Address(), window.trading.Address(), tokens_to_buy), 
+                           window.coins.WaitForMoneyAllowanceP(window.user.Address(), window.trading.Address(), coins_to_spent)]))
+//  function transfer(Token _coins, Token _tokens, address _seller, address _buyer, address _bloomio, uint256 _tokensMoved, uint256 _price, uint256 _feeValue) onlyOwner returns (bool) {
+          .then(()=>window.trading.TransferP(window.coins.Address(), window.tokens.Address(), window.bank.Address(), window.user.Address(), window.bank.Address(), tokens_to_buy, coins_to_spent, 0))
+          .then((id)=>window.trading.Account.WaitForTransactionP(id))
+          .then(()=>update_balances());
+  
+}
+
+
+</script>
+
+
+<button id="deploy" onclick="deploy()">deploy</button>
+<br>
+<a>bank account key address: </a><a id="bank_address"><notinitialized></a>
+<br>
+<a>bank wallet address: </a><a id="bank_wallet_address"><notinitialized></a>
+<br>
+<a>trading address: </a><a id="trading_address"><notinitialized></a>
+<br>
+<a>coins address: </a><a id="coins_address"><notinitialized></a>
+<a>  coins bank balance: </a><a id="coins_bank_balance"><notinitialized></a>
+<br>
+<br>
+
+<button id="create_user" onclick="create_user()">SignIn</button>
+<br>
+<a>user public key address: </a><a id="user_address"><notinitialized></a>
+<br>
+<a>user public wallet address: </a><a id="user_wallet_address"><notinitialized></a>
+<a>user coins balance: </a><a id="user_coins_balance"><notinitialized></a>
+<br>
+<a>tokens user balance: </a><a id="tokens_user_balance"><notinitialized></a>
+<br>
+
+<button id="send_money_to_user" onclick="send_money_to_user()">Send money to user</button>
+<br>
+
+<button id="deploy_startup" onclick="deploy_startup()">deploy statrtup</button>
+<br>
+<a>coins address: </a><a id="startup_address"><notinitialized></a>
+<a>  tokens bank balance: </a><a id="tokens_bank_balance"><notinitialized></a>
+<br>
+
+<button id="buy_tokens" onclick="buy_tokens()">buy 300 token by 1000 coins</button>
+<button id="refresh" onclick="update_balances()">refresh</button>
+
+
+</body>
+</html>

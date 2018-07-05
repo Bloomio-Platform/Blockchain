@@ -1,0 +1,49 @@
+{
+    "name": "Gruu",
+    "engine": {
+		"authorityRound": {
+			"params": {
+				"gasLimitBoundDivisor": "0x0400",
+                "stepDuration": "0x01",
+                "validators" : { 
+					"list": [
+                        "0x793d97d8a06cd220fe07cf4816802523c2d90159"
+					]
+				}
+			}
+		}
+	},
+	"params": {
+		"accountStartNonce": "0x0100000",
+		"frontierCompatibilityModeLimit": "0x789b0",
+		"maximumExtraDataSize": "0x20",
+		"minGasLimit": "0x1388",
+		"networkID" : "0x44"
+	},
+	"genesis": {
+		"seal": {
+			"authorityRound": {
+        "step": "0x0",
+        "signature": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+			}
+		},
+		"difficulty": "0x20000",
+		"author": "0x0000000000000000000000000000000000000000",
+		"timestamp": "0x00",
+		"parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+		"extraData": "0x",
+		"gasLimit": "0x2fefd800"
+	},
+    "nodes": [
+        "enode://b469f63f297773adbc12b8a4c38e821988860d2e503b040b8e025062cd6c772b6672c901d27fac49d8f8452f198e0fb64e8ce45d03d6d175828fc04202abba39@127.0.0.1:30303"
+    ],
+    "accounts": {
+        "0x0000000000000000000000000000000000000001": { "balance": "1", "nonce": "1048576", "builtin": { "name": "ecrecover", "pricing": { "linear": { "base": 3000, "word": 0 } } } },
+        "0x0000000000000000000000000000000000000002": { "balance": "1", "nonce": "1048576", "builtin": { "name": "sha256", "pricing": { "linear": { "base": 60, "word": 12 } } } },
+        "0x0000000000000000000000000000000000000003": { "balance": "1", "nonce": "1048576", "builtin": { "name": "ripemd160", "pricing": { "linear": { "base": 600, "word": 120 } } } },
+        "0x0000000000000000000000000000000000000004": { "balance": "1", "nonce": "1048576", "builtin": { "name": "identity", "pricing": { "linear": { "base": 15, "word": 3 } } } },
+        "0x16267b5bc121c76f2b8dcfc178908af1127c999e": { "balance": "1606938044258990275541962092341162602522202993782792835301376", "nonce": "1048576" },
+        "0x1ac6aedaa9bf5be1c7242db60c544fbecd415951": { "balance": "1606938044258990275541962092341162602522202993782792835301376", "nonce": "1048576" },
+        "0x793d97d8a06cd220fe07cf4816802523c2d90159": { "balance": "1606938044258990275541962092341162602522202993782792835301376", "nonce": "1048576" }
+    }
+}
