@@ -1,2 +1,0 @@
-rem parity.exe --chain morden2.json --jsonrpc-interface all --jsonrpc-hosts all  --rpccorsdomain "*" --engine-signer 0xe0c9c660a3c8d486e081a9b7cdf07fe0bbfe6d23 --password pp --usd-per-tx 0 --force-sealing --keys-path parity/keys --db-path parity -lown_tx,sync=trace
-parity.exe --chain morden2.json --jsonrpc-interface all --jsonrpc-hosts all  --rpccorsdomain "*" --engine-signer 0x53b997c30a39e32170339dee2cb1997519cb5b7b --password pp --usd-per-tx 0 --keys-path parity/keys --db-path parity --log-file logfile.out --no-dapps -lpip=trace,on_demand=trace
