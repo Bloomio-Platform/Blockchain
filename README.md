@@ -1,25 +1,33 @@
-#Bloomio's Solidity smart contracts
+# Bloomio's Solidity smart contracts
 
-##account.sol
+## account.sol
+
 Implements one owning account contract
 
-##attested.sol
+## attested.sol
+
 Method to distinguish accounts attested by Bloomio
 
-##bloomio_coin.sol
+## bloomio_coin.sol
+
 Implements Bloomio Coin contract
 
-##bloomio_owned.sol
+## bloomio_owned.sol
+
 Implements verification of attested contracts
 
-##bloomio_token.sol
+## bloomio_token.sol
+
 Implements Bloomio Token contract
 
-##owned.sol
+## owned.sol
+
 Provides base for Owned contracts.
 
-##token.sol
+## token.sol
+
 Public ERC20 tokens interface
 
-##trading.sol
+## trading.sol
+
 Implements transfers coins and tokens between attested accounts
